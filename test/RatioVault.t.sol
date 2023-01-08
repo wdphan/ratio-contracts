@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.15;
 
-import "lib/forge-std/lib/ds-test/src/test.sol";
+import "forge-std/Test.sol";
 import "src/RatioVault.sol";
 import {MyNFT} from "src/MyNFT.sol";
 
