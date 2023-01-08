@@ -6,6 +6,7 @@ import "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721.sol";
 import "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 import "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "lib/openzeppelin-contracts/contracts//token/ERC721/utils/ERC721Holder.sol";
+import "src/IRatioVault.sol";
 
 /// @title A simulator for trees
 /// @author William Phan
@@ -34,7 +35,7 @@ contract RatioVault is ERC20, ERC20Permit, ERC721Holder {
     bool public canRedeem = false;
 
     /// @dev Constructor for the MyToken contract
-    constructor() ERC20("MyToken", "MTK") ERC20Permit("MyToken") {}
+    constructor() ERC20("Ratio", "RTIO") ERC20Permit("Ratio") {}
 
     /// @notice Initializes the contract with a specified token and amount
     /// @dev Initializes the contract with a specified token and amount
@@ -42,13 +43,16 @@ contract RatioVault is ERC20, ERC20Permit, ERC721Holder {
     /// @param _tokenId uint256 ID of the NFT to be used in the contract
     /// @param _amount uint256 the amount of NFTs to be held by the contract
     function init(address _collection, uint256 _tokenId, uint256 _amount) external {
-        require(!initialized, "Already initialized");
-        require(_amount > 0, "Amount needs to be more than 0");
+        if (initialized) revert IRatioVault.AlreadyInitialized();
+        if (_amount <= 0) revert IRatioVault.CannotBeLessThanZero();
+        // require(!initialized, "Already initialized");
+        // require(_amount > 0, "Amount needs to be more than 0");
         collection = IERC721(_collection);
         collection.safeTransferFrom(msg.sender, address(this), _tokenId);
         tokenId = _tokenId;
         initialized = true;
         _mint(msg.sender, _amount);
+        emit initialized(msg.sender, _amount);
     }
 
     /// @notice Puts the NFT for sale
@@ -56,26 +60,34 @@ contract RatioVault is ERC20, ERC20Permit, ERC721Holder {
     function putForSale(uint256 price) external {
         salePrice = price;
         forSale = true;
+        emit listNFT(msg.sender, _amount);
     }
 
     /// @notice Purchases the NFT
     function purchase() external payable {
-        require(forSale, "Not for sale");
-        require(msg.value >= salePrice, "Not enough ether sent");
-        collection.transferFrom(address(this), msg.sender, tokenId);
+        if (!forSale) revert IRatioVault.NotForSale();
+        if (msg.value < salePrice) revert IRatioVault.NotEnoughEther();
+        // require(forSale, "Not for sale");
+        // require(msg.value >= salePrice, "Not enough ether sent");
         forSale = false;
         canRedeem = true;
+        collection.transferFrom(address(this), msg.sender, tokenId);
+        // forSale = false;
+        // canRedeem = true;
+        emit purchaseNFT(msg.sender, msg.value, tokenId);
     }
 
     /// @notice Redeems the amount of NFTs for ether
     /// @dev Redeems the amount of NFTs for ether
     /// @param _amount uint256 amount of NFTs to be redeemed
     function redeem(uint256 _amount) external {
-        require(canRedeem, "Redemption not available");
+        if (!canRedeem) revert IRatioVault.CannotRedeem();
+        // require(canRedeem, "Redemption not available");
         uint256 totalEther = address(this).balance;
         uint256 toRedeem = _amount * totalEther / totalSupply();
 
         _burn(msg.sender, _amount);
         payable(msg.sender).transfer(toRedeem);
+        emit redeemTokens(msg.sender, _amount);
     }
 }
