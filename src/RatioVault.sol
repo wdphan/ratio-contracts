@@ -45,8 +45,6 @@ contract RatioVault is ERC20, ERC20Permit, ERC721Holder {
     function init(address _collection, uint256 _tokenId, uint256 _amount) external {
         if (initialized) revert IRatioVault.AlreadyInitialized();
         if (_amount <= 0) revert IRatioVault.CannotBeLessThanZero();
-        // require(!initialized, "Already initialized");
-        // require(_amount > 0, "Amount needs to be more than 0");
         collection = IERC721(_collection);
         collection.safeTransferFrom(msg.sender, address(this), _tokenId);
         tokenId = _tokenId;
@@ -67,8 +65,6 @@ contract RatioVault is ERC20, ERC20Permit, ERC721Holder {
     function purchase() external payable {
         if (!forSale) revert IRatioVault.NotForSale();
         if (msg.value < salePrice) revert IRatioVault.NotEnoughEther();
-        // require(forSale, "Not for sale");
-        // require(msg.value >= salePrice, "Not enough ether sent");
         forSale = false;
         canRedeem = true;
         collection.transferFrom(address(this), msg.sender, tokenId);
@@ -82,7 +78,6 @@ contract RatioVault is ERC20, ERC20Permit, ERC721Holder {
     /// @param _amount uint256 amount of NFTs to be redeemed
     function redeem(uint256 _amount) external {
         if (!canRedeem) revert IRatioVault.CannotRedeem();
-        // require(canRedeem, "Redemption not available");
         uint256 totalEther = address(this).balance;
         uint256 toRedeem = _amount * totalEther / totalSupply();
 
