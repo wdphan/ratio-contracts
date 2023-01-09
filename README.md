@@ -1,4 +1,4 @@
-# Latter
+# Ratio Contracts
 
 > Mini-implementation of Fractional
 
