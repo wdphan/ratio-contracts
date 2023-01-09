@@ -6,7 +6,7 @@ import "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721.sol";
 import "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 import "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "lib/openzeppelin-contracts/contracts//token/ERC721/utils/ERC721Holder.sol";
-import "src/IRatioVault.sol";
+import "src/interfaces/IRatioVault.sol";
 
 /// @title A simulator for trees
 /// @author William Phan
