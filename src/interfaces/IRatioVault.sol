@@ -4,7 +4,7 @@ pragma solidity ^0.8.15;
 interface IRatioVault {
 
     /// @notice This event is emitted when the contract is initialized with a minter and an amount of tokens.
-    event initialized(address indexed minter, uint amount);
+    event initial(address indexed minter, uint amount);
 
     /// @notice This event is emitted when an NFT token is listed for sale, with a seller, price, and token ID.
     event listNFT(address indexed seller, uint price);
@@ -40,7 +40,7 @@ interface IRatioVault {
 
     /// @notice Puts the NFT for sale
     /// @param price uint256 the price of the NFT
-    function putForSale(uint256 price) external;
+    function init(uint256 price) external;
 
     /// @notice Purchases the NFT
     function purchase() external payable;
