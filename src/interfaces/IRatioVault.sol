@@ -30,6 +30,21 @@ interface IRatioVault {
     /// @notice This error is thrown when tokens cannot be redeemed.
     error CannotRedeem();
 
+    /// @dev The ID of the token
+    function tokenId() external returns (uint256);
+
+    /// @dev Boolean indicating whether the token has been initialized
+    function initialized() external returns (bool);
+
+    /// @dev Boolean indicating whether the token is for sale
+    function forSale() external returns (bool);
+
+    /// @dev Price of the token
+    function salePrice() external returns (uint);
+
+    /// @dev Boolean indicating whether the token can be redeemed
+    function canRedeem() external returns (bool);
+
     /// @notice Initializes the contract with a specified token and amount
     /// @dev Initializes the contract with a specified token and amount
     /// @param _collection address of the ERC721 collection contract
