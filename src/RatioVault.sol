@@ -14,7 +14,7 @@ import "src/interfaces/IRatioVault.sol";
 /// @dev All function calls are currently implemented without side effects
 /// @custom:experimental This is an experimental contract.
 
-contract RatioVault is ERC20, ERC20Permit, ERC721Holder {
+contract RatioVault is IRatioVault, ERC20, ERC20Permit, ERC721Holder {
 
     /// @dev This contract inherits from IERC721 and implements a collection of tokens
     IERC721 public collection;
