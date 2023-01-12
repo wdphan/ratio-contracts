@@ -61,6 +61,13 @@ contract RatioVault is IRatioVault, ERC20, ERC20Permit, ERC721Holder {
         emit listNFT(msg.sender);
     }
 
+    function ifForSale() public view returns (uint id, uint salePrice) {
+    if(forSale = true) {
+        return tokenId;
+        return salePrice;
+    }
+}
+
     /// @notice Purchases the NFT
     function purchase() external payable {
         if (!forSale) revert IRatioVault.NotForSale();

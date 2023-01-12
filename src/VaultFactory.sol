@@ -8,6 +8,8 @@ import "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/draft-ERC20P
 // import "lib/openzeppelin-contracts/contracts/token/ERC721/utils/ERC721Holder.sol";
 import "src/InitializedProxy.sol";
 import "src/RatioVault.sol";
+import "lib/openzeppelin-contracts/contracts/utils/Counters.sol";
+
 
 contract VaultFactory is Ownable, CloneFactory {
 
@@ -20,6 +22,7 @@ contract VaultFactory is Ownable, CloneFactory {
   }
 
   function createVault() public payable returns (address newVault) {
+
     address clone = createClone(libraryAddress);
     // RatioVault(clone).init(_collection);
     RatioVault(clone);
