@@ -55,7 +55,7 @@ interface IRatioVault {
 
     /// @notice Puts the NFT for sale
     /// @param price uint256 the price of the NFT
-    function init(uint256 price) external;
+    function putForSale(uint256 price) external;
 
     /// @notice Purchases the NFT
     function purchase() external payable;

@@ -42,7 +42,7 @@ contract RatioVault is IRatioVault, ERC20, ERC20Permit, ERC721Holder {
     /// @param _collection address of the ERC721 collection contract
     /// @param _tokenId uint256 ID of the NFT to be used in the contract
     /// @param _amount uint256 the amount of NFTs to be held by the contract
-    function init(address _collection, uint256 _tokenId, uint256 _amount) external {
+    function nftInit(address _collection, uint256 _tokenId, uint256 _amount) external {
         if (initialized) revert IRatioVault.AlreadyInitialized();
         if (_amount <= 0) revert IRatioVault.CannotBeLessThanZero();
         collection = IERC721(_collection);
