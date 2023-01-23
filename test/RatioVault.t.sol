@@ -4,11 +4,13 @@ pragma solidity ^0.8.15;
 import "forge-std/Test.sol";
 import "src/RatioVault.sol";
 import {MyNFT} from "src/MyNFT.sol";
+import "src/VaultFactory.sol";
 
 contract RatioVaultTest is Test {
     RatioVault public ratio;
     MyNFT public nft;
     RatioVaultTest public test;
+    VaultFactory public factory;
 
     address bob = vm.addr(111);
     address bill = vm.addr(222);
@@ -16,6 +18,7 @@ contract RatioVaultTest is Test {
     function setUp() public {
         ratio = new RatioVault();
         nft = new MyNFT();
+        factory = new VaultFactory();
         vm.label(bob, "BOB");
         vm.deal(bob, 100 ether);
         vm.label(bill, "BILL");
@@ -35,9 +38,9 @@ contract RatioVaultTest is Test {
 
     function testInit() public {
         nft.safeMint(bob, 1);
-        nft.setApprovalForAll(address(test), true);
-        vm.prank(address(bob));
-        ratio.init(address(nft), 1, 100);
+        vm.startPrank(bob);
+        nft.setApprovalForAll(address(ratio), true);
+        ratio.nftInit(address(nft), 1, 100);
     }
 
     function testPutForSale() public {
@@ -50,13 +53,25 @@ contract RatioVaultTest is Test {
     }
 
     function testFailPurchase() public {
+        nft.safeMint(bob, 1);
+        vm.startPrank(bob);
+        nft.setApprovalForAll(address(ratio), true);
+        ratio.nftInit(address(nft), 1, 100);
+
         vm.prank(bob);
         ratio.putForSale(100);
+
         vm.prank(bill);
-        ratio.purchase{value: 90 wei}();
+        ratio.purchase{value: 100 wei}();
     }
 
     function testPurchase() public {
+        nft.safeMint(bob, 1);
+        vm.startPrank(bob);
+        nft.setApprovalForAll(address(ratio), true);
+        ratio.nftInit(address(nft), 1, 100);
+        vm.stopPrank();
+
         vm.prank(bob);
         ratio.putForSale(100);
         vm.prank(bill);
@@ -64,11 +79,18 @@ contract RatioVaultTest is Test {
     }
 
     function testRedeem() public {
+        nft.safeMint(bob, 1);
+        vm.startPrank(bob);
+        nft.setApprovalForAll(address(ratio), true);
+        ratio.nftInit(address(nft), 1, 100);
+        vm.stopPrank();
+
         vm.prank(bob);
         ratio.putForSale(100);
         vm.prank(bill);
         ratio.purchase{value: 100 wei}();
-        vm.prank(bob);
+
+        vm.startPrank(bob);
         ratio.redeem(100);
     }
 
@@ -79,5 +101,15 @@ contract RatioVaultTest is Test {
         ratio.purchase{value: 100 wei}();
         vm.prank(bob);
         ratio.redeem(110);
+    }
+
+    function testVaultFactory() public {
+        factory.setLibraryAddress(address(ratio));
+        factory.createVault();
+    }
+
+    function testFailVaultFactory() public {
+        vm.expectRevert();
+        factory.createVault();
     }
 }
