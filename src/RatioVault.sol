@@ -8,9 +8,9 @@ import "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/draft-ERC20P
 import "lib/openzeppelin-contracts/contracts//token/ERC721/utils/ERC721Holder.sol";
 import "src/interfaces/IRatioVault.sol";
 
-/// @title A simulator for trees
+/// @title Ratio Vault
 /// @author William Phan
-/// @notice You can use this contract for only the most basic simulation
+/// @notice Split tokens into erc-20 shares
 /// @dev All function calls are currently implemented without side effects
 /// @custom:experimental This is an experimental contract.
 
